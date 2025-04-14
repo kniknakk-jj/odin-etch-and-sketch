@@ -1,17 +1,76 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>My Website</title>
-  <link rel="stylesheet" href="styles.css" />
+  <style>
+    #container {
+      display: grid;
+      gap: 1px;
+      width: 600px;
+      height: 600px;
+      margin: 20px auto;
+      border: 2px solid #000;
+    }
+
+    .grid-item {
+      background-color: #eee;
+      border: 1px solid #ccc;
+    }
+
+    .clear {
+      display: block;
+      margin: 20px auto;
+      padding: 10px 20px;
+      font-size: 16px;
+    }
+  </style>
 </head>
 <body>
+  <div id="container"></div>
 
-  <h1>Welcome to My Etch and Sketch</h1>
-    <div id="container"></div>
+  <script>
+    const container = document.getElementById("container");
+    let gridSize = parseInt(prompt("What will be your grid size? "));
 
+    function makeRows(gridSize) {
+      container.style.gridTemplateRows = `repeat(${gridSize}, 1fr)`;
+      container.style.gridTemplateColumns = `repeat(${gridSize}, 1fr)`;
+      for (let c = 0; c < gridSize * gridSize; c++) {
+        let cell = document.createElement("div");
+        cell.className = "grid-item";
+        container.appendChild(cell);
 
-  <script src="script.js"></script>
+        cell.addEventListener("mouseover", function () {
+            const x = Math.floor(Math.random() * 256);
+            const y = Math.floor(Math.random() * 256);
+            const z = Math.floor(Math.random() * 256);
+          
+            if (!this.style.backgroundColor) {
+              this.style.backgroundColor = `rgb(${x}, ${y}, ${z})`;
+              this.dataset.brightness = 1;
+            }
+          
+            let brightness = parseFloat(this.dataset.brightness);
+            if (brightness > 0.1) {
+              brightness -= 0.1;
+              this.dataset.brightness = brightness;
+              this.style.filter = `brightness(${brightness})`;
+            }
+          });
+      }
+    }
+
+    const clear = document.createElement("button");
+    clear.textContent = "Clear";
+    clear.classList.add("clear");
+    document.body.appendChild(clear);
+
+    clear.addEventListener("click", () => {
+      container.innerHTML = "";
+      gridSize = parseInt(prompt("What will be your grid size? "), 10);
+      makeRows(gridSize);
+    });
+
+    makeRows(gridSize);
+  </script>
 </body>
 </html>
